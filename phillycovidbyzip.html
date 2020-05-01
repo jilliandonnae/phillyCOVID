@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Philly COVID-19 Cases - 4/20/20</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body {
+  margin: 0;
+  padding: 0;
+}
+
+h2,
+h3 {
+  margin: 10px;
+  font-size: 1.2em;
+}
+
+h3 {
+  font-size: 1em;
+}
+
+p {
+  font-size: 0.85em;
+  margin: 10px;
+  text-align: left;
+}
+
+/**
+* Create a position for the map
+* on the page */
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  margin-right: 20px;
+  font-family: Arial, sans-serif;
+  overflow: auto;
+  border-radius: 3px;
+}
+
+#features {
+  top: 0;
+  height: 120px;
+  margin-top: 30px;
+  width: 250px;
+}
+
+#legend {
+  padding: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  line-height: 18px;
+  height: 100px;
+  margin-bottom: 40px;
+  width: 100px;
+}
+
+.legend-key {
+  display: inline-block;
+  border-radius: 20%;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+</style>
+</head>
+<body>
+<div id="map"></div>
+    <div class='map-overlay' id='features'><h2>Philadelphia Positive COVID-19 Cases by Zip Code</h2><div id='pd'><p>Hover over a zip code!</p></div></div>
+<div class='map-overlay' id='legend'></div>
+<script>
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiamlsbGlhbmRvbm5hZSIsImEiOiJjazhka2NlbTEwdmZrM2VxYzg5cTAxN3d6In0.qgUqZ2VuzlMTOO3TKzVdNA';
+        
+        
+    var map = new mapboxgl.Map({
+  container: 'map', // container id
+
+  style: 'mapbox://styles/jilliandonnae/ck9apzf2422yn1ik6metspebv' // replace this with your style URL
+});
+
+    map.on('load', function() {
+
+var layers = ['0', '16-122', '123-229', '230-335', '336-442'];
+var colors = ['#e6e5e5', '#fee1e1', '#fd9b9b', '#fd1717',  '#b10202', '#320101'];
+        
+for (i = 0; i < layers.length; i++) {
+  var layer = layers[i];
+  var color = colors[i];
+  var item = document.createElement('div');
+  var key = document.createElement('span');
+  key.className = 'legend-key';
+  key.style.backgroundColor = color;
+
+  var value = document.createElement('span');
+  value.innerHTML = layer;
+  item.appendChild(key);
+  item.appendChild(value);
+  legend.appendChild(item);
+}
+
+map.on('mousemove', function(e) {
+  var covidpos = map.queryRenderedFeatures(e.point, {
+    layers: ['covidpos']
+  });
+
+  if (covidpos.length > 0) {
+    document.getElementById('pd').innerHTML = '</strong></h3><p><strong><em>' + covidpos[0].properties.CovidCasesByZip_Count + '</strong> positive COVID-19 cases as of 4/20/20</em></p>';
+  } else {
+    document.getElementById('pd').innerHTML = '<p><b>Null</b> - Hover over a zip code with confirmed covid cases</p>';
+  }
+});
+ 
+
+        
+map.getCanvas().style.cursor = 'default';
+        
+map.fitBounds([39.952583, -75.165222]);
+
+});
+    
+    
+
+
+        
+      </script>
